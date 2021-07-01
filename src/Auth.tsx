@@ -9,7 +9,7 @@ async function isLogin({ jwtToken }: any) {
     Authorization: "bearer " + jwtToken
   };
 
-  const response = await axios.get("http://10.13.7.3:4000/auth/isLogined", {
+  const response = await axios.get("http://10.13.8.3:4000/auth/isLogined", {
     headers: headers
   });
 

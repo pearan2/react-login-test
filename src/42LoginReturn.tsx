@@ -6,7 +6,7 @@ import { useCookies } from "react-cookie";
 import { Redirect } from "react-router-dom";
 
 async function tryLogin({ code }: any) {
-  const response = await axios.post("http://10.13.7.3:4000/auth/login", {
+  const response = await axios.post("http://10.13.8.3:4000/auth/login", {
     loginType: "42",
     code: code
   });

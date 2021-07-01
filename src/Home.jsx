@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import WithAuth from "./Auth";
 import io from "socket.io-client"; // socket.io-client 2.3.1 version 을 사용하기 위해서 킹쩔수없이 jsx 로 만든다.
-import { useCookies } from "react-cookie";
 
+// socket
 let socket;
 
 const Home = () => {
@@ -10,29 +10,24 @@ const Home = () => {
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const [cookie] = useCookies(["jwtToken"]);
   useEffect(() => {
     try {
-      const socketOptions = {
-        transportOptions: {
-          polling: {
-            extraHeaders: {
-              Authorization: "Bearer " + cookie.jwtToken //'Bearer h93t4293t49jt34j9rferek...'
-            }
-          }
-        }
-      };
-      socket = io("http://10.13.7.3:4000/");
-      //socket = io("http://10.13.7.3:4000/", socketOptions);
+      if (socket === undefined) {
+        console.log("refreshed!");
+        socket = io("http://10.13.8.3:4000/", { withCredentials: true });
 
-      socket.on("connect", () => {
-        console.log("connected!!");
-      });
-      socket.on("message", data => {
-        setMessages(messages => {
-          return messages.concat(data);
+        socket.on("connect", () => {
+          console.log("connected!!");
         });
-      });
+        socket.on("message", data => {
+          setMessages(messages => {
+            return messages.concat(data);
+          });
+        });
+        socket.on("disconnect", () => {
+          console.log("disconnected!");
+        });
+      }
 
       return () => {
         socket.close();
